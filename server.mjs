@@ -9,13 +9,13 @@ import morgan from "morgan";
 import mongoose from "mongoose"; // Note: For Mongo DB Database...!
 
 // Note: Connecting to Mongo DB Database...!
-let requiredURL = 'mongodb+srv://dbahmed:ahmed1995@cluster0.owlt1.mongodb.net/MERN_CRUD_DB?retryWrites=true&w=majority';
+let requiredURL = "mongodb+srv://db-ahmed:ahmed1996@cluster0.owlt1.mongodb.net/MERN_CRUD_DB?retryWrites=true&w=majority"
 mongoose.connect(requiredURL, () => {
     console.log("Database Connected!"); // Note: If this console is running, It's mean your database is connected successfully...!
 });
 
 // Note: User schema ready for users collection...!
-const MyUser = mongoose.model("User", {
+const MyUser = mongoose.model("users", {
     name: String,
     email: String,
     password: String
@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
     res.send('MERN CRUD App Back-End!');
 });
 
-// Note: API function to save all users...!
+// Note: API function to fetch all users...!
 app.get("/users", (req, res) => {
     MyUser.find({}, (error, users) => {
         if (!error) {
@@ -75,6 +75,38 @@ app.post("/user", (req, res) => {
                 console.log(error.response);
             })
     }
+});
+
+// Note: API function to delete user from DB...!
+app.post("/user/delete", (req, res) => {
+    // console.log('User Id: ', req.body._id);
+
+    MyUser.findByIdAndRemove(req.body._id, (err, data) => {
+        if (!err) {
+            res.send('User Deleted Successfully!');
+        }
+
+        else {
+            res.status(500).send("Something Went Wrong in Delete API!");
+        }
+    })
+});
+
+// Note: API function to update user from DB...!
+app.post("/user/update", (req, res) => {
+    console.log('User Id: ', req.body._id);
+
+    MyUser.findByIdAndUpdate(
+        req.body._id, req.body.updateUserData, { new: true },
+        (err, data) => {
+            if (!err) {
+                res.send(data);
+            }
+
+            else {
+                res.status(500).send('Something Went Wrong in Delete API!');
+            }
+        });
 });
 
 // Note: If no path found then this path will run...!
