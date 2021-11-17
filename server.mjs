@@ -109,6 +109,19 @@ app.post("/user/update", (req, res) => {
         });
 });
 
+// Note: API function to delete all users from DB...!
+app.delete("/usersDeleteAll", (req, res) => {
+    MyUser.deleteMany({}, (err, data) => {
+        if (!err) {
+            res.send('Deleted all users successfully!');
+        }
+
+        else {
+            res.status(500).send("Something Went Wrong in Delete All Users API!");
+        }
+    })
+});
+
 // Note: If no path found then this path will run...!
 app.get("*", (req, res) => {
     res.send('Sorry! Page Not Found!');
